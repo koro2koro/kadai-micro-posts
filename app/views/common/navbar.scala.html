@@ -1,3 +1,5 @@
+@import b3.vertical.fieldConstructor
+
 @(userOpt: Option[User])(implicit messagesProvider: MessagesProvider, request: RequestHeader)
 
 <header>
@@ -31,7 +33,11 @@
                             <li><a href="#">@Messages("User")</a></li>
                             <li role="separator" class="divider"></li>
                             <li>
-                                <a href="#">@Messages("LogOut")</a>
+                                @* ログアウト用のフォームとjavascriptの追加 *@
+                                @b3.formCSRF(routes.AuthController.logout(), 'name -> "logout", 'style -> "display: none") {
+                                @b3.submit() { @Messages("LogOut") }
+                                }
+                                <a href="#" onclick="document.logout.submit();">@Messages("LogOut")</a>
                             </li>
                         </ul>
                     </li>
