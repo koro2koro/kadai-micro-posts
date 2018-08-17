@@ -28,7 +28,8 @@ libraryDependencies ++= Seq(
   "org.flywaydb"           %% "flyway-play"                  % "4.0.0",
   "com.github.t3hnar"      %% "scala-bcrypt"                 % "3.1",
   "jp.t2v"                 %% "play2-auth"                   % "0.16.0-SNAPSHOT",
-  "jp.t2v"                 %% "play2-auth-test"              % "0.16.0-SNAPSHOT" % Test
+  "jp.t2v"                 %% "play2-auth-test"              % "0.16.0-SNAPSHOT" % Test,
+  "org.postgresql"         % "postgresql"                    % "42.0.0"
 )
 
 // Adds additional packages into Twirl
@@ -50,3 +51,16 @@ flywayDriver := envConfig.value.getString("jdbcDriver")
 flywayUrl := envConfig.value.getString("jdbcUrl")
 flywayUser := envConfig.value.getString("jdbcUserName")
 flywayPassword := envConfig.value.getString("jdbcPassword")
+
+herokuJdkVersion in Compile := "1.8"
+
+herokuAppName in Compile := "koro2koro-micro-posts" // ご自身のアプリケーション名を指定してください
+
+// prod/application.confであることを確認してください
+herokuProcessTypes in Compile := Map(
+  "web" -> s"target/universal/stage/bin/${normalizedName.value} -Dhttp.port=$$PORT -Dconfig.resource=prod/application.conf -Ddb.default.migration.auto=true"
+)
+
+herokuConfigVars in Compile := Map(
+  "JAVA_OPTS" -> "-Xmx512m -Xms512m"
+)
