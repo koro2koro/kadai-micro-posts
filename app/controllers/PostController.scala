@@ -65,7 +65,7 @@ class PostController @Inject()(val userService: UserService,
     microPostService
       .findAllByWithLimitOffset(Pagination(10, page), user.id.get)
       .map { pagedItems =>
-        BadRequest(views.html.index(Some(user), formWithErrors, pagedItems))
+        BadRequest(views.html.index(Some(user), formWithErrors, pagedItems, List.empty[Long]))
       }
       .recover {
         case e: Exception =>
