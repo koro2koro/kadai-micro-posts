@@ -15,6 +15,7 @@ import skinny.Pagination
 @Singleton
 class PostController @Inject()(val userService: UserService,
                                val microPostService: MicroPostService,
+                               val favoriteService: FavoriteService,
                                components: ControllerComponents)
   extends AbstractController(components)
     with I18nSupport
@@ -77,6 +78,9 @@ class PostController @Inject()(val userService: UserService,
   }
 
   def delete(microPostId: Long, page: Int): Action[AnyContent] = StackAction { implicit request =>
+
+    favoriteService.deleteBy(loggedIn.id.get, microPostId)
+
     microPostService
       .deleteById(microPostId)
       .map { _ =>

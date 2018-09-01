@@ -29,7 +29,7 @@ class HomeController @Inject()(val userService: UserService,
     val userOpt = loggedIn
     userOpt.map { user =>
       val favoriteIds = favoriteService.findById(user.id.get).get.map(_.micropostId)
-      microPostService.findAllByWithLimitOffset(Pagination(2, page), user.id.get).map { pagedItems =>
+      microPostService.findAllByWithLimitOffset(Pagination(10, page), user.id.get).map { pagedItems =>
         Ok(views.html.index(userOpt, postForm, pagedItems, favoriteIds))
       }.recover {
         case e: Exception =>

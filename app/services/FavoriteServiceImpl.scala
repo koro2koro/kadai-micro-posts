@@ -1,7 +1,7 @@
 package services
 
 import javax.inject.Singleton
-import models.{Favorite, MicroPost, PagedItems, User}
+import models._
 import scalikejdbc._
 import skinny.Pagination
 
@@ -75,5 +75,25 @@ class FavoriteServiceImpl extends FavoriteService {
       )
     } else 0
   }
+
+  override def findAllByWithLimitOffset(pagination: Pagination, userId: Long)(
+    implicit dbSession: DBSession
+  ): Try[PagedItems[MicroPost]] = Try {
+    val favoritePostIds: Seq[Long] = Favorite.findAllBy(sqls.eq(Favorite.defaultAlias.userId, userId)).map(_.micropostId)
+    //val size = MicroPost.countBy(sqls.in(MicroPost.defaultAlias.userId, favoriteIds))
+    PagedItems(pagination, favoritePostIds.size, findAllByWithLimitOffset(favoritePostIds)(pagination))
+  }
+
+  private def findAllByWithLimitOffset(favoritePostIds: Seq[Long])(pagination: Pagination)(
+    implicit dbSession: DBSession
+  ): Seq[MicroPost] = MicroPost.findAllByWithLimitOffset(
+    sqls.in(MicroPost.defaultAlias.id, favoritePostIds),
+    pagination.limit,
+    pagination.offset,
+    Seq(MicroPost.defaultAlias.id.desc)
+  )
+
+
+
 
 }

@@ -28,4 +28,8 @@ trait FavoriteService {
 
   def deleteBy(userId: Long, micropostId: Long)(implicit dbSession: DBSession = AutoSession): Try[Int]
 
+  def findAllByWithLimitOffset(pagination: Pagination, userId: Long)(
+    implicit dbSession: DBSession = AutoSession
+  ): Try[PagedItems[MicroPost]]
+
 }

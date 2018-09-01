@@ -69,10 +69,7 @@ class UsersController @Inject()(
     val triedUserFollows    = userFollowService.findById(loggedIn.id.get)
     val pagination          = Pagination(10, page)
     val favoriteIds = favoriteService.findById(loggedIn.id.get).get.map(_.micropostId)
-
-    //val triedMicroPosts     = microPostService.findByUserId(pagination, userId)
-
-    val triedMicroPosts     = favoriteService.findFavoriteByUserId(pagination, userId)
+    val triedMicroPosts     = favoriteService.findAllByWithLimitOffset(pagination, userId)
     val triedFollowingsSize = userFollowService.countByUserId(userId)
     val triedFollowersSize  = userFollowService.countByFollowId(userId)
     val triedFavoriteSize   = favoriteService.countByUserId(userId)
