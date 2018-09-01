@@ -4,7 +4,8 @@ user: User,
 userFollows: List[UserFollow],
 followings: PagedItems[User],
 microPostsCount: Long,
-followersCount: Long)(implicit messagesProvider: MessagesProvider, flash: Flash, request: RequestHeader)
+followersCount: Long,
+favoriteCount: Long)(implicit messagesProvider: MessagesProvider, flash: Flash, request: RequestHeader)
 
 @main(Messages("User"), Some(currentUser)) {
 <div class="row">
@@ -20,7 +21,7 @@ followersCount: Long)(implicit messagesProvider: MessagesProvider, flash: Flash,
         </div>
     </aside>
     <div class="col-xs-8">
-        @views.html.users.tab(user, microPostsCount, followings.totalCount, followersCount, followersCount)
+        @views.html.users.tab(user, microPostsCount, followings.totalCount, followersCount, favoriteCount)
         @views.html.users.users(currentUser, followings)
     </div>
 </div>

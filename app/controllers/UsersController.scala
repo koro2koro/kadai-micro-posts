@@ -100,11 +100,13 @@ class UsersController @Inject()(
     val triedFollowers       = userFollowService.findFollowersByUserId(pagination, userId)
     val triedMicroPostsSize  = microPostService.countBy(userId)
     val triedFollowingsSize  = userFollowService.countByUserId(userId)
+    val triedFavoriteSize    = favoriteService.countByUserId(userId)
     (for {
       userFollows    <- triedMaybeUserFollow
       followers      <- triedFollowers
       microPostSize  <- triedMicroPostsSize
       followingsSize <- triedFollowingsSize
+      favoriteSize   <- triedFavoriteSize
     } yield {
       Ok(
         views.html.users.followers(
@@ -113,7 +115,8 @@ class UsersController @Inject()(
           userFollows,
           followers,
           microPostSize,
-          followingsSize
+          followingsSize,
+          favoriteSize
         )
       )
     }).recover {
@@ -132,11 +135,13 @@ class UsersController @Inject()(
     val triedFollowings     = userFollowService.findFollowingsByUserId(pagination, userId)
     val triedMicroPostsSize = microPostService.countBy(userId)
     val triedFollowersSize  = userFollowService.countByFollowId(userId)
+    val triedFavoriteSize   = favoriteService.countByUserId(userId)
     (for {
       userFollows    <- triedUserFollows
       followings     <- triedFollowings
       microPostsSize <- triedMicroPostsSize
       followersSize  <- triedFollowersSize
+      favoriteSize   <- triedFavoriteSize
     } yield {
       Ok(
         views.html.users.followings(
@@ -145,7 +150,8 @@ class UsersController @Inject()(
           userFollows,
           followings,
           microPostsSize,
-          followersSize
+          followersSize,
+          favoriteSize
         )
       )
     }).recover {
