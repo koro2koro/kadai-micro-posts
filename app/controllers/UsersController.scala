@@ -70,7 +70,7 @@ class UsersController @Inject()(
     val pagination          = Pagination(10, page)
     val favoriteIds = favoriteService.findById(loggedIn.id.get).get.map(_.micropostId)
 
-    val triedMicroPosts     = microPostService.findByUserId(pagination, userId)
+    //val triedMicroPosts     = microPostService.findByUserId(pagination, userId)
 
     val triedMicroPosts     = favoriteService.findFavoriteByUserId(pagination, userId)
     val triedFollowingsSize = userFollowService.countByUserId(userId)
@@ -84,8 +84,6 @@ class UsersController @Inject()(
       followersSize  <- triedFollowersSize
       favoriteSize   <- triedFavoriteSize
     } yield {
-      //val favoriteIds = favoriteService.findById(loggedIn.id.get).get.map(_.micropostId)
-      println("#####microPosts#####" + microPosts)
       userOpt.map { user =>
         Ok(views.html.users.show(loggedIn, user, userFollows, microPosts, followingsSize, followersSize, favoriteSize, favoriteIds))
       }.get
